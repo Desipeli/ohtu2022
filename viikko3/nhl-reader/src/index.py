@@ -5,8 +5,8 @@ def main():
     url = "https://studies.cs.helsinki.fi/nhlstats/2021-22/players"
     response = requests.get(url).json()
 
-    print("JSON-muotoinen vastaus:")
-    print(response)
+    # print("JSON-muotoinen vastaus:")
+    # print(response)
 
     players = []
 
@@ -23,11 +23,17 @@ def main():
 
         players.append(player)
 
+    def total_score(player):
+        return player.goals + player.assists
+
+    def players_fin(player):
+        if player.nationality == "FIN":
+            return player
+
     print("Players from FIN:")
 
-    for player in players:
-        if player.nationality == "FIN":
-            print(player)
+    for player in sorted(filter(players_fin, players),key=total_score, reverse=True):
+        print(player)
 
 if __name__ == "__main__":
     main()
