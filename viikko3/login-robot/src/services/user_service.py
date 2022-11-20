@@ -1,3 +1,4 @@
+import re
 from entities.user import User
 
 
@@ -8,6 +9,11 @@ class UserInputError(Exception):
 class AuthenticationError(Exception):
     pass
 
+class UsernameSyntaxError(Exception):
+    pass
+
+class PasswordSyntaxError(Exception):
+    pass
 
 class UserService:
     def __init__(self, user_repository):
@@ -37,4 +43,9 @@ class UserService:
         if not username or not password:
             raise UserInputError("Username and password are required")
 
-        # toteuta loput tarkastukset tänne ja nosta virhe virhetilanteissa
+        if len(username) < 3 or not re.match("^[a-z]+$", username):
+            raise UsernameSyntaxError("Username must be at least 3 letters long, and contain only [a-z]")
+
+        if len(password) < 8 or re.match("^[A-z]+$", password):
+            raise PasswordSyntaxError("Password must be at least 8 characters long and must contain also other symbols than letters")
+
